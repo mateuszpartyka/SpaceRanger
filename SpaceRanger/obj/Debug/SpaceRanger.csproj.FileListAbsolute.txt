@@ -1,0 +1,9 @@
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.exe.config
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.exe
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.pdb
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csprojResolveAssemblyReference.cache
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.Form1.resources
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.Properties.Resources.resources
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csproj.GenerateResource.Cache
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.exe
+c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.pdb
