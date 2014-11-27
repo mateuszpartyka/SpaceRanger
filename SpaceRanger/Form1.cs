@@ -23,7 +23,9 @@ namespace SpaceRanger
         List<SpaceEnemy> enemiesList;
         
         Point spaceRangerPosition = new Point();
-        
+
+        Random randomIncrement;
+
         Rectangle spaceRangerRigidBody, spaceRangerShot;
 
         Timer shotTimer;
@@ -107,11 +109,16 @@ namespace SpaceRanger
             // generate enemies
             for (int i = 0; i < enemyCount; i++)
             {
-                if (i != 0 && i % (enemyCount/3) == 0)
+                if (i != 0 && i % (enemyCount / 3) == 0)
+                {
                     enemyPlaceCorrection += 10;
+                }
+
                 enemiesList.Add(
                     new SpaceEnemy(
-                        new Point((40 * (i % (enemyCount/3))) + enemyPlaceCorrection, (int) (i/(enemyCount/3)) * 40 + enemyPlaceCorrection), new Size(30, 20)
+                        new Point((40 * (i % (enemyCount/3))) + enemyPlaceCorrection, (int) (i/(enemyCount/3)) * 40 + enemyPlaceCorrection),
+                        new Size(30, 20),
+                        3 - (i / (enemyCount / 3))
                     )
                 );
             }
@@ -137,7 +144,7 @@ namespace SpaceRanger
                 enemiesList.Insert(i, currentEnemy);
 
                 // if enemy touches edge of battle space, change its X drection
-                if (enemiesList.ElementAt(i).X > panelBattleSpace.Width - 30 || enemiesList.ElementAt(i).X == 0)
+                if (enemiesList.ElementAt(i).X > panelBattleSpace.Width - 30 || enemiesList.ElementAt(i).X < 0)
                     currentEnemy.incrementX *= -1;
 
                 // if enemies colides with themselves, change their X direction
@@ -283,10 +290,13 @@ namespace SpaceRanger
                     break;
 
                 case Keys.Space:
-                    spaceRangerShots.Add(new Point(spaceRangerPosition.X + 10, spaceRangerPosition.Y - 3));
-                    spaceRangerShot.X = spaceRangerPosition.X + 10;
-                    spaceRangerShot.Y = spaceRangerPosition.Y - 3;
-                    isShooting = true;
+                    if (spaceRangerShots.Count < 5)
+                    {
+                        spaceRangerShots.Add(new Point(spaceRangerPosition.X + 10, spaceRangerPosition.Y - 3));
+                        spaceRangerShot.X = spaceRangerPosition.X + 10;
+                        spaceRangerShot.Y = spaceRangerPosition.Y - 3;
+                        isShooting = true;
+                    }
                     break;
             }
 

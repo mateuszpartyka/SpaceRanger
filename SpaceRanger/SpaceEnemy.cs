@@ -31,12 +31,12 @@ namespace SpaceRanger
             set { x = value; }
         }
 
-        public SpaceEnemy(Point coordinates, Size size)
+        public SpaceEnemy(Point coordinates, Size size, int increment)
         {
             rigidBody = new Rectangle(coordinates, size);
             x = coordinates.X;
             y = coordinates.Y;
-            incrementX = 1;
+            incrementX = increment;
         }
 
         public void Invalidate() 
