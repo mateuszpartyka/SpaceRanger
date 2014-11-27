@@ -45,7 +45,7 @@
             this.menuStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(351, 24);
+            this.menuStrip.Size = new System.Drawing.Size(445, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -54,6 +54,7 @@
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
             this.newGameToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
             this.newGameToolStripMenuItem.Text = "New game";
+            this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -66,7 +67,7 @@
             this.panelBattleSpace.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(70)))), ((int)(((byte)(95)))));
             this.panelBattleSpace.Location = new System.Drawing.Point(12, 68);
             this.panelBattleSpace.Name = "panelBattleSpace";
-            this.panelBattleSpace.Size = new System.Drawing.Size(326, 445);
+            this.panelBattleSpace.Size = new System.Drawing.Size(423, 588);
             this.panelBattleSpace.TabIndex = 1;
             this.panelBattleSpace.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBattleSpace_Paint);
             // 
@@ -86,7 +87,7 @@
             this.labelCounter.AutoSize = true;
             this.labelCounter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.labelCounter.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.labelCounter.Location = new System.Drawing.Point(288, 36);
+            this.labelCounter.Location = new System.Drawing.Point(350, 36);
             this.labelCounter.Name = "labelCounter";
             this.labelCounter.Size = new System.Drawing.Size(18, 20);
             this.labelCounter.TabIndex = 2;
@@ -97,7 +98,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(47)))), ((int)(((byte)(63)))));
-            this.ClientSize = new System.Drawing.Size(351, 525);
+            this.ClientSize = new System.Drawing.Size(445, 668);
             this.Controls.Add(this.labelCounter);
             this.Controls.Add(this.labelScore);
             this.Controls.Add(this.panelBattleSpace);

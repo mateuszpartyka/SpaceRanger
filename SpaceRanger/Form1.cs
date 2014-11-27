@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SpaceRanger
 {
     public partial class Form1 : Form
     {
-        Point spaceRangerPosition = new Point();
-        Rectangle[] enemiesPositions = new Rectangle[16];
-        Rectangle spaceRangerRigidBody, spaceRangerShot;
-        Graphics g;
         bool isShooting = false;
-        Timer timer = new Timer();
-        Timer enemyTimer = new Timer();
-        Timer counter = new Timer();
-        int score = 0, incrementX = 1;
         double counterValue;
+        int score, minutes, enemyCount, enemyPlaceCorrection;
+        
+        Bitmap spaceRangerBitmap, enemyBitmap;
+        Graphics g;
 
-        //PointF[] spaceRangerRigidBody = new PointF[4];
+        Color[] enemyColors;
+        
+        List<int> enemiesDestroyed = new List<int>();
+        List<Point> spaceRangerShots;
+        List<SpaceEnemy> enemiesList;
+        
+        Point spaceRangerPosition = new Point();
+        
+        Rectangle spaceRangerRigidBody, spaceRangerShot;
+
+        Timer shotTimer;
+        Timer enemyTimer;
+        Timer elapsedTimeTimer;
+
         public Form1()
         {
             InitializeComponent();
@@ -32,101 +37,203 @@ namespace SpaceRanger
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // anti-fickering fix
             typeof(Panel).InvokeMember("DoubleBuffered",
                 BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
                 null, panelBattleSpace, new object[] { true });
 
-            timer.Interval = 10;
-            timer.Tick += timer_Tick;
+            enemyColors = new Color[6] {Color.Crimson, Color.LimeGreen, Color.Cyan, Color.Plum, Color.DarkOrange, Color.WhiteSmoke};        
 
-            enemyTimer.Interval = 20;
-            enemyTimer.Enabled = true;
-            enemyTimer.Tick += enemyTimer_Tick;
-
-            counter.Enabled = true;
-            counter.Interval = 10;
-            counter.Tick += counter_Tick;
-
+            // applies custom renderer, so that menu strip can have different colors after hovering the items
             menuStrip.Renderer = new CustomToolStripRenderer();
             menuStrip.BackColor = Color.FromArgb(210, 126, 77);
             menuStrip.ForeColor = Color.WhiteSmoke;
 
+            StartNewGame();
+            
+        }
+
+        private void StartNewGame()
+        {
+            if (enemyTimer != null)
+            {
+                shotTimer.Dispose();
+                enemyTimer.Dispose();
+                elapsedTimeTimer.Dispose();
+            }
+
+            shotTimer = new Timer();
+            enemyTimer = new Timer();
+            elapsedTimeTimer = new Timer();
+            score = 0;
+            //incrementX = 1;
+            minutes = 0;
+            enemyCount = 24;
+            enemyPlaceCorrection = 10;
+            counterValue = 0;
+            labelScore.Text = "Score: 0";
+
+            // provides shot animations
+            shotTimer.Interval = 10;
+            shotTimer.Tick += timer_Tick;
+
+            // moves enemies
+            enemyTimer.Interval = 20;
+            enemyTimer.Enabled = true;
+            enemyTimer.Tick += enemyTimer_Tick;
+
+            // counts elapsed time
+            elapsedTimeTimer.Enabled = true;
+            elapsedTimeTimer.Interval = 10;
+            elapsedTimeTimer.Tick += counter_Tick;
+
+            spaceRangerShots = new List<Point>();
+            enemiesList = new List<SpaceEnemy>();
+
+            // calculate Space Ranger position (center and down the panel)
             spaceRangerPosition.X = (panelBattleSpace.Width / 2) - 10;
-            spaceRangerPosition.Y = panelBattleSpace.Height - 25;
+            spaceRangerPosition.Y = panelBattleSpace.Height - 35;
 
-            spaceRangerRigidBody = new Rectangle(spaceRangerPosition, new Size(20, 15));
+            // initialize Space Ranger rigid body
+            spaceRangerRigidBody = new Rectangle(spaceRangerPosition, new Size(5, 45));
+            spaceRangerBitmap = new Bitmap("E:\\SpaceRanger\\SpaceRanger\\Sprites\\spaceship.png");
 
+            enemyBitmap = new Bitmap("E:\\SpaceRanger\\SpaceRanger\\Sprites\\alien.png");
+
+            // define shot dimensions
             spaceRangerShot.Width = 3;
             spaceRangerShot.Height = 3;
 
-            enemiesPositions[0].X = 20;
-            enemiesPositions[0].Y = 10;
-
-            for (int i = 1; i < enemiesPositions.Length; i++)
+            // generate enemies
+            for (int i = 0; i < enemyCount; i++)
             {
-                
-                if (i == (enemiesPositions.Length / 2) + 1)
-                    enemiesPositions[i - 1].X = 10;
-
-                if (i >= (enemiesPositions.Length / 2))
-                {
-                    enemiesPositions[i].Y = 40;
-                }
-                else
-                {
-                    enemiesPositions[i].Y = 10;
-                }
-
-                enemiesPositions[i].X = enemiesPositions[i - 1].X + 40;
-                enemiesPositions[i].Size = new Size(15, 15);
-
+                if (i != 0 && i % (enemyCount/3) == 0)
+                    enemyPlaceCorrection += 10;
+                enemiesList.Add(
+                    new SpaceEnemy(
+                        new Point((40 * (i % (enemyCount/3))) + enemyPlaceCorrection, (int) (i/(enemyCount/3)) * 40 + enemyPlaceCorrection), new Size(30, 20)
+                    )
+                );
             }
-
-            //labelScore.Font = new Font(labelScore.Font.Name, 12);
-
         }
 
+        // counts elapsed time
         void counter_Tick(object sender, EventArgs e)
         {
-            counterValue += 0.1;
-            labelCounter.Text = counterValue.ToString("#.##");
+            counterValue += 0.01;
+            if (counterValue % 60 == 0 && counterValue != 0)
+                minutes++;
+            labelCounter.Text = minutes.ToString() + ":" + (counterValue % 60).ToString("00.00").Replace(",",":");
         }
 
+        // moves enemies
         void enemyTimer_Tick(object sender, EventArgs e)
         {
-            for (int i = 0; i < enemiesPositions.Length; i++)
-                enemiesPositions[i].X += incrementX;
+            for (int i = 0; i < enemiesList.Count; i++) {
+                SpaceEnemy currentEnemy = enemiesList.ElementAt(i);
+                currentEnemy.X += currentEnemy.incrementX;
+                currentEnemy.Invalidate();
+                enemiesList.RemoveAt(i);
+                enemiesList.Insert(i, currentEnemy);
 
-            if (enemiesPositions[enemiesPositions.Length - 1].X == panelBattleSpace.Width - 20 || enemiesPositions[0].X == 0)
-                incrementX *= -1;
+                // if enemy touches edge of battle space, change its X drection
+                if (enemiesList.ElementAt(i).X > panelBattleSpace.Width - 30 || enemiesList.ElementAt(i).X == 0)
+                    currentEnemy.incrementX *= -1;
+
+                // if enemies colides with themselves, change their X direction
+                for (int j = 0; j < enemiesList.Count; j++)
+                {
+                    SpaceEnemy colidingEnemy = enemiesList.ElementAt(j);
+                    if (currentEnemy.RigidBody.Contains(colidingEnemy.RigidBody.Location))
+                    {
+                        currentEnemy.incrementX *= -1;
+                        colidingEnemy.incrementX *= -1;
+                    }
+                }
+            }
 
             panelBattleSpace.Refresh();
         }
 
+        // moves bullet
         void timer_Tick(object sender, EventArgs e)
         {
-            spaceRangerShot.Y -= 5;
-
-            if (spaceRangerShot.Y < 0)
+            // recalculate each bullets Y position
+            for (int i = 0; i < spaceRangerShots.Count; i++)
             {
-                timer.Enabled = false;
-                isShooting = false;
-            }
+                Point currentShot = spaceRangerShots.ElementAt(i);
+                currentShot.Y -= 5;
+                spaceRangerShots.RemoveAt(i);
+                spaceRangerShots.Insert(i, currentShot);
 
-            for (int i = 0; i < enemiesPositions.Length; i++)
-            {
-                if (enemiesPositions[i].Contains(spaceRangerShot))
+                // if bullets goes past the edge of the screen, delete it
+                if (spaceRangerShots.ElementAt(i).Y < 0)
                 {
-                    timer.Enabled = false;
-                    isShooting = false;
-                    score += 50;
-                    labelScore.Text = "Score: " + score;
-                    enemiesPositions[i].Y = -50;
+                    spaceRangerShots.RemoveAt(i);
                 }
             }
 
-                panelBattleSpace.Refresh();
+            // if bullet hits enemy, destroy them both
+            for (int i = 0; i < enemiesList.Count; i++)
+            {
+                SpaceEnemy currentEnemy = enemiesList.ElementAt(i);
 
+                for (int j = 0; j < spaceRangerShots.Count; j++)
+                {
+                    Point currentShot = spaceRangerShots.ElementAt(j);
+                    if (currentEnemy.RigidBody.Contains(currentShot))
+                    {
+                        score += 50;
+                        labelScore.Text = "Score: " + score;
+                        enemiesList.RemoveAt(i);
+                        spaceRangerShots.RemoveAt(j);
+                        break;
+                    }
+                }
+            }
+
+            // if all enemies are gone, end the game
+            if (enemiesList.Count == 0)
+                endGame();
+
+            panelBattleSpace.Refresh();
+
+        }
+
+        // occurs when game ends
+        private void endGame()
+        {
+            isShooting = false;
+            spaceRangerShots.RemoveRange(0, spaceRangerShots.Count - 1);
+            
+            shotTimer.Enabled = false;
+            shotTimer.Stop();
+            
+            elapsedTimeTimer.Enabled = false;
+            elapsedTimeTimer.Stop();
+            
+            enemyTimer.Enabled = false;
+            enemyTimer.Stop();
+
+            ShowWinDialog();
+        }
+
+        // show input for player name to Hall of Fame
+        private void ShowWinDialog()
+        {
+            FormWinDialog winDialog = new FormWinDialog(labelCounter.Text);
+            DialogResult result = winDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                MessageBox.Show(winDialog.getName() + " - " + labelCounter.Text);
+            }
+            else
+            {
+                MessageBox.Show("Nie podałeś imienia :(");
+            }
+
+            winDialog.Dispose();
         }
 
         private void panelBattleSpace_Paint(object sender, PaintEventArgs e)
@@ -137,19 +244,26 @@ namespace SpaceRanger
             spaceRangerRigidBody.X = spaceRangerPosition.X;
             spaceRangerRigidBody.Y = spaceRangerPosition.Y;
 
-            g.FillRectangle(new SolidBrush(Color.FromName("WhiteSmoke")), spaceRangerRigidBody);
-            g.DrawRectangle(new Pen(Color.FromName("WhiteSmoke")), spaceRangerRigidBody);
+            // draw Space Ranger
+            g.DrawImage(spaceRangerBitmap, spaceRangerPosition.X - 10, spaceRangerPosition.Y -10, 40, 40);
 
-            for (int i = 0; i < enemiesPositions.Length; i++)
+            // draw laser
+            g.DrawLine(new Pen(Color.FromArgb(45, 255, 0, 0)), new Point(spaceRangerPosition.X + 10, spaceRangerPosition.Y), new Point(spaceRangerPosition.X + 10, panelBattleSpace.Height / 2));
+
+            // draw enemies based on their position
+            for (int i = 0; i < enemiesList.Count; i++)
             {
-                g.FillRectangle(new SolidBrush(Color.FromName("Green")), enemiesPositions[i]);
-                g.DrawRectangle(new Pen(Color.FromName("Green")), enemiesPositions[i]);
+                g.DrawImage(((Bitmap)enemyBitmap.Clone()), enemiesList.ElementAt(i).RigidBody);
             }
 
+            // if Ranger is shooting, start moving the bullet
             if (isShooting)
             {
-                timer.Enabled = true;
-                g.DrawRectangle(new Pen(Color.LightYellow), spaceRangerShot);
+                for (int i = 0; i < spaceRangerShots.Count; i++)
+                {
+                    shotTimer.Enabled = true;
+                    g.DrawRectangle(new Pen(Color.LightYellow), new Rectangle(spaceRangerShots.ElementAt(i), new Size(3, 3)));
+                }
             }
 
         }
@@ -159,23 +273,29 @@ namespace SpaceRanger
             switch (e.KeyData)
             {
                 case Keys.Left:
-                    if (spaceRangerPosition.X > 2)
+                    if (spaceRangerPosition.X > 14)
                         spaceRangerPosition.X = spaceRangerPosition.X - 4;
                     break;
 
                 case Keys.Right:
-                    if (spaceRangerPosition.X < panelBattleSpace.Width - 22)
+                    if (spaceRangerPosition.X < panelBattleSpace.Width - 31)
                         spaceRangerPosition.X = spaceRangerPosition.X + 4;
                     break;
 
                 case Keys.Space:
-                    isShooting = true;
+                    spaceRangerShots.Add(new Point(spaceRangerPosition.X + 10, spaceRangerPosition.Y - 3));
                     spaceRangerShot.X = spaceRangerPosition.X + 10;
                     spaceRangerShot.Y = spaceRangerPosition.Y - 3;
+                    isShooting = true;
                     break;
             }
 
             panelBattleSpace.Refresh();
+        }
+
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartNewGame();
         }
     }
 }

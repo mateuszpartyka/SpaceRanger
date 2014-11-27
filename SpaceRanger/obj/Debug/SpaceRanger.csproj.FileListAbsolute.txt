@@ -7,3 +7,22 @@ c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\o
 c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csproj.GenerateResource.Cache
 c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.exe
 c:\users\mateusz\documents\visual studio 2013\Projects\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.pdb
+E:\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.exe.config
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.exe
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.pdb
+G:\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.exe.config
+G:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.exe
+G:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.pdb
+G:\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.exe
+G:\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.pdb
+G:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csprojResolveAssemblyReference.cache
+G:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.Form1.resources
+G:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.Properties.Resources.resources
+G:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csproj.GenerateResource.Cache
+E:\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.exe
+E:\SpaceRanger\SpaceRanger\bin\Debug\SpaceRanger.pdb
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csprojResolveAssemblyReference.cache
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.Form1.resources
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.Properties.Resources.resources
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.csproj.GenerateResource.Cache
+E:\SpaceRanger\SpaceRanger\obj\Debug\SpaceRanger.FormWinDialog.resources
