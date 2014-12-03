@@ -94,7 +94,7 @@
             this.Controls.Add(this.textBoxName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FormWinDialog";
-            this.Text = "Wygrałeś!";
+            this.Text = "Koniec gry!";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormWinDialog_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
